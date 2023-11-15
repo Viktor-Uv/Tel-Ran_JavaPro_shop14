@@ -1,6 +1,10 @@
-package com.example.shop14;
+package com.example.shop14.controller;
 
+import com.example.shop14.entity.Product;
+import com.example.shop14.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -38,8 +42,13 @@ public class ProductController {
 
     // DELETE /products/{id}
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productRepository.deleteById(id); // deletes only if this id present
+    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable Long id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET /products/{id}
