@@ -1,7 +1,11 @@
 package com.example.shop14.entity;
 
+import com.example.shop14.validation.Between;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -21,9 +25,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Length(min = 5, max = 50, message = "Product name length must be 5-50 characters")
     @Column(name = "PRODUCT_NAME", length = 50, nullable = false, unique = false)
+    // @Pattern(regexp = "^.{5,50}$", message = "Product name must be from 5 to 50 characters")
+    // @Email
     private String name;
 
+//    @Min(value = 0, message = "Price should be positive")
+//    @Max(value = 50, message = "Price should be less than 50")
+    @Between(from = 0.01, to = 50.5, message = "Price must be between 0.01 - 50.5")
+    @Positive(message = "Price should be positive")
     @Column(name = "PRODUCT_PRICE", columnDefinition = "Decimal(10, 2) default '0.0'", nullable = false)
     private BigDecimal price;
 

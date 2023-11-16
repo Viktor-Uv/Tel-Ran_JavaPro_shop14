@@ -34,9 +34,11 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    // POST /products
-    @PostMapping("/products")
-    public Product createProduct(@RequestBody Product product) {
+    // PUT /products
+    @PutMapping("/products")
+    public Product addProduct(@RequestBody Product product) {
+        // проверить цену продукта - больше 0
+        // проверить длину имени - не пустая и меньше или равна 50 символов
         return productRepository.save(product); // return product instance upon successful save
     }
 
@@ -53,18 +55,14 @@ public class ProductController {
 
     // GET /products/{id}
     @GetMapping("/products/{id}")
-    public Product getProductByProductId(@PathVariable Long id) {
+    public Product getProductById(@PathVariable Long id) {
         return productRepository.findById(id)
                 .orElse(null); // returns searched instance only when searched id is present
     }
 
-    // PUT /products/{id}
-    @PutMapping("/products/{id}")
-    public Product updateComment(@PathVariable Long id, @RequestBody Product product) {
-        if (productRepository.existsById(id)) {
-            return productRepository.save(product); // update existing instance by id
-        } else {
-            return null;
-        }
+    // GET /products
+    @GetMapping("/products")
+    public Iterable<Product> getAllProducts(){
+        return productRepository.findAll();
     }
 }
