@@ -3,6 +3,7 @@ package com.example.shop14.controller;
 import com.example.shop14.entity.Product;
 import com.example.shop14.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,17 @@ public class ProductController {
 
     // GET /products
     @GetMapping("/products")
-    public Iterable<Product> getAllProducts(){
+    public Iterable<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    // GET http://localhost:8080/products/page?page=0&size=5
+    @GetMapping("/products/page")
+    public Iterable<Product> getPage(
+            @RequestParam(defaultValue = "0") int page, // номер страницы
+            @RequestParam(defaultValue = "5") int size // количество продуктов на странице
+    ) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        return productRepository.getPage(pageable).get().toList();
     }
 }
